@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оценка половой конституции и сексуального темперамента</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            display: none;
+            width: 90%;
+            max-width: 1200px;
+            text-align: center;
+            padding: 40px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        h2 {
+            font-size: 2.5em;
+            margin-bottom: 25px;
+            color: #ffeb3b;
+        }
+
+        h3 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #81c784;
+        }
+
+        .content {
+            font-size: 1.3em;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .quiz-container {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .question {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .question label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.2);
+            padding: 10px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .radio-group label:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+
+        .radio-group input[type="radio"] {
+            width: auto;
+            margin-right: 8px;
+        }
+
+        button {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(0,0,0,0.3);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 16px;
+        }
+
+        .results {
+            background: rgba(255,255,255,0.15);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .score-bar {
+            background: rgba(255,255,255,0.2);
+            height: 20px;
+            border-radius: 10px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .score-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            transition: width 1s ease-in-out;
+            border-radius: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        th {
+            background: rgba(255,255,255,0.2);
+            font-weight: bold;
+        }
+
+        .highlight {
+            background: rgba(255, 255, 0, 0.3);
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 5px;
+        }
+
+        .chart-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+        }
+
+        .chart {
+            text-align: center;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #ffa500);
+            transition: width 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <div class="slide-counter">
+            <span id="currentSlide">1</span> / <span id="totalSlides">12</span>
+        </div>
+
+        <!-- Слайд 1: Титульный -->
+        <div class="slide active">
+            <h1>🧬 Оценка половой конституции и сексуального темперамента</h1>
+            <div class="content">
+                <h3>Научные методики самопознания</h3>
+                <p>📊 Методика Г.С. Васильченко (векторная шкала)</p>
+                <p>🧠 Dual Control Model Эмили Нагоски</p>
+                <p>🎯 Интерактивная диагностика и персональные рекомендации</p>
+            </div>
+        </div>
+
+        <!-- Слайд 2: Теория -->
+        <div class="slide">
+            <h2>📚 Теоретические основы</h2>
+            <div class="content">
+                <div style="display: flex; justify-content: space-between; gap: 30px;">
+                    <div style="flex: 1; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
+                        <h3>Половая конституция (Васильченко)</h3>
+                        <p>• Врожденная биологическая характеристика</p>
+                        <p>• 7 векторов для мужчин, 10 для женщин</p>
+                        <p>• Объективные + субъективные показатели</p>
+                        <p>• Балльная система оценки (1-9)</p>
+                    </div>
+                    <div style="flex: 1; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
+                        <h3>Сексуальный темперамент (Нагоски)</h3>
+                        <p>• SIS - сексуальное торможение</p>
+                        <p>• SES - сексуальное возбуждение</p>
+                        <p>• Индивидуальный "газ" и "тормоз"</p>
+                        <p>• Контекстно-зависимая модель</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Слайд 3: Выбор теста -->
+        <div class="slide">
+            <h2>🎮 Выберите тест</h2>
+            <div class="content">
+                <div style="display: flex; justify-content: center; gap: 50px; margin-top: 50px;">
+                    <button onclick="startVasilchenkoTest('male')" style="padding: 30px 40px; font-size: 20px;">
+                        👨 Тест Васильченко<br>(Мужчины)
+                    </button>
+                    <button onclick="startVasilchenkoTest('female')" style="padding: 30px 40px; font-size: 20px;">
+                        👩 Тест Васильченко<br>(Женщины)
+                    </button>
+                    <button onclick="startNagoskiTest()" style="padding: 30px 40px; font-size: 20px;">
+                        🧠 Тест Нагоски<br>(Универсальный)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Слайд 4: Тест Васильченко (мужчины) -->
+        <div class="slide">
+            <h2>👨 Тест половой конституции (мужчины)</h2>
+            <div class="quiz-container">
+                <form id="vasilchenkoMaleForm">
+                    <div class="question">
+                        <label>1. Возраст пробуждения либидо (лет):</label>
+                        <input type="number" id="libido_age_m" min="8" max="25" placeholder="Например: 12">
+                    </div>
+                    
+                    <div class="question">
+                        <label>2. Возраст первой эякуляции (лет):</label>
+                        <input type="number" id="ejaculation_age_m" min="8" max="25" placeholder="Например: 13">
+                    </div>
+                    
+                    <div class="question">
+                        <label>3. Трохантерный индекс (рост/длина ноги от вертела):</label>
+                        <input type="number" id="trochanter_m" step="0.01" min="1.5" max="2.5" placeholder="Например: 1.95">
+                        <small style="display: block; color: #ffeb3b; margin-top: 5px;">
+                            💡 Измерьте рост и длину от большого вертела бедра до пола, разделите рост на длину ноги
+                        </small>
+                    </div>
+                    
+                    <div class="question">
+                        <label>4. Характер оволосения лобка:</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="hair_m" value="1"> По женскому типу</label>
+                            <label><input type="radio" name="hair_m" value="4"> Переходный тип</label>
+                            <label><input type="radio" name="hair_m" value="7"> По мужскому типу</label>
+                            <label><input type="radio" name="hair_m" value="9"> Гипертрихоз</label>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <label>5. Максимальное количество эякуляций за 24 часа:</label>
+                        <input type="number" id="max_excess_m" min="0" max="15" placeholder="Например: 3">
+                    </div>
+                    
+                    <button type="button" onclick="calculateVasilchenkoMale()">📊 Рассчитать результат</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Слайд 5: Тест Васильченко (женщины) -->
+        <div class="slide">
+            <h2>👩 Тест половой конституции (женщины)</h2>
+            <div class="quiz-container">
+                <form id="vasilchenkoFemaleForm">
+                    <div class="question">
+                        <label>1. Возраст первой менструации (лет):</label>
+                        <input type="number" id="menarche_age_f" min="8" max="20" placeholder="Например: 13">
+                    </div>
+                    
+                    <div class="question">
+                        <label>2. Трохантерный индекс:</label>
+                        <input type="number" id="trochanter_f" step="0.01" min="1.5" max="2.5" placeholder="Например: 1.98">
+                    </div>
+                    
+                    <div class="question">
+                        <label>3. Возраст пробуждения либидо (лет):</label>
+                        <input type="number" id="libido_age_f" min="8" max="25" placeholder="Например: 14">
+                    </div>
+                    
+                    <div class="question">
+                        <label>4. Возраст первого оргазма (лет):</label>
+                        <input type="number" id="orgasm_age_f" min="12" max="40" placeholder="Например: 18">
+                    </div>
+                    
+                    <div class="question">
+                        <label>5. Характер оволосения лобка:</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="hair_f" value="1"> Скудное, по мужскому типу</label>
+                            <label><input type="radio" name="hair_f" value="4"> Переходный тип</label>
+                            <label><input type="radio" name="hair_f" value="7"> По женскому типу</label>
+                            <label><input type="radio" name="hair_f" value="9"> Гипертрихоз</label>
+                        </div>
+                    </div>
+                    
+                    <button type="button" onclick="calculateVasilchenkoFemale()">📊 Рассчитать результат</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Слайд 6: Тест Нагоски -->
+        <div class="slide">
+            <h2>🧠 Тест сексуального темперамента (Нагоски)</h2>
+            <div class="quiz-container">
+                <p style="margin-bottom: 20px;">Оцените каждое утверждение от 0 (совсем не про меня) до 4 (полностью про меня):</p>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" id="nagoskiProgress" style="width: 0%"></div>
+                </div>
+                
+                <form id="nagoskiForm">
+                    <!-- SIS вопросы -->
+                    <h3 style="color: #ff6b6b; margin: 20px 0;">🛑 Факторы торможения (SIS)</h3>
+                    
+                    <div class="question">
+                        <label>1. Пока все не будет «как надо», мне сложно почувствовать сексуальное возбуждение</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="sis1" value="0"> 0</label>
+                            <label><input type="radio" name="sis1" value="1"> 1</label>
+                            <label><input type="radio" name="sis1" value="2"> 2</label>
+                            <label><input type="radio" name="sis1" value="3"> 3</label>
+                            <label><input type="radio" name="sis1" value="4"> 4</label>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <label>2. Когда я возбуждена/возбужден, любая мелочь способна уничтожить это возбуждение</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="sis2" value="0"> 0</label>
+                            <label><input type="radio" name="sis2" value="1"> 1</label>
+                            <label><input type="radio" name="sis2" value="2"> 2</label>
+                            <label><input type="radio" name="sis2" value="3"> 3</label>
+                            <label><input type="radio" name="sis2" value="4"> 4</label>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <label>3. Мне крайне важно доверять партнеру, чтобы по-настоящему возбудиться</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="sis3" value="0"> 0</label>
+                            <label><input type="radio" name="sis3" value="1"> 1</label>
+                            <label><input type="radio" name="sis3" value="2"> 2</label>
+                            <label><input type="radio" name="sis3" value="3"> 3</label>
+                            <label><input type="radio" name="sis3" value="4"> 4</label>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <label>4. Если я переживаю, что не смогу быстро возбудиться или достичь оргазма, это блокирует возбуждение</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="sis4" value="0"> 0</label>
+                            <label><input type="radio" name="sis4" value="1"> 1</label>
+                            <label><input type="radio" name="sis4" value="2"> 2</label>
+                            <label><input type="radio" name="sis4" value="3"> 3</label>
+                            <label><input type="radio" name="sis4" value="4"> 4</label>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <label>5. Стеснение и излишние размышления во время секса мешают мне</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="sis5" value="0"> 0</label>
+                            <label><input type="radio" name="sis5" value="1"> 1</label>
+                            <label><input type="radio" name="sis5" value="2"> 2</label>
+                            <label><input type="radio" name="sis5" value="3"> 3</label>
+                            <label><input type="radio" name="sis5" value="4"> 4</label>
+                        </div>
+                    </div>
+
+                    <!-- SES вопросы -->
+                    <h3 style="color: #4CAF50; margin: 20px 0;">🚀 Факторы возбуждения (SES)</h3>
+                    
+                    <div class="question">
+                        <label>6. Я могу возбуждаться от одного только аромата человека</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="ses1" value="0"> 0</label>
+                            <label><input type="radio" name="ses1" value="1"> 1</label>
+                            <label><input type="radio" name="ses1" value="2"> 2</label>
+                            <label><input type="radio" name="ses1" value="3"> 3</label>
+                            <label><input type="radio" name="ses1" value="4"> 4</label>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <label>7. Когда партнер проявляет талант или ум, это меня возбуждает</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="ses2" value="0"> 0</label>
+                            <label><input type="radio" name="ses2" value="1"> 1</label>
+                            <label><input type="radio" name="ses2" value="2"> 2</label>
+                            <label><input type="radio" name="ses2" value="3"> 3</label>
+                            <label><input type="radio" name="ses2" value="4"> 4</label>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <label>8. Возможность секса в необычном месте меня возбуждает</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="ses3" value="0"> 0</label>
+                            <label><input type="radio" name="ses3" value="1"> 1</label>
+                            <label><input type="radio" name="ses3" value="2"> 2</label>
+                            <label><input type="radio" name="ses3" value="3"> 3</label>
+                            <label><input type="radio" name="ses3" value="4"> 4</label>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <label>9. Фантазии или мысли о сексе легко вызывают у меня возбуждение</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="ses4" value="0"> 0</label>
+                            <label><input type="radio" name="ses4" value="1"> 1</label>
+                            <label><input type="radio" name="ses4" value="2"> 2</label>
+                            <label><input type="radio" name="ses4" value="3"> 3</label>
+                            <label><input type="radio" name="ses4" value="4"> 4</label>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <label>10. Гормональные изменения (цикл, беременность) усиливают мою возбудимость</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="ses5" value="0"> 0</label>
+                            <label><input type="radio" name="ses5" value="1"> 1</label>
+                            <label><input type="radio" name="ses5" value="2"> 2</label>
+                            <label><input type="radio" name="ses5" value="3"> 3</label>
+                            <label><input type="radio" name="ses5" value="4"> 4</label>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <label>11. Я сильно возбуждаюсь, когда кто-то явно хочет меня</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="ses6" value="0"> 0</label>
+                            <label><input type="radio" name="ses6" value="1"> 1</label>
+                            <label><input type="radio" name="ses6" value="2"> 2</label>
+                            <label><input type="radio" name="ses6" value="3"> 3</label>
+                            <label><input type="radio" name="ses6" value="4"> 4</label>
+                        </div>
+                    </div>
+                    
+                    <button type="button" onclick="calculateNagoski()">🧠 Рассчитать темперамент</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Слайд 7: Результаты Васильченко -->
+        <div class="slide">
+            <h2>📊 Результаты теста Васильченко</h2>
+            <div class="results" id="vasilchenkoResults" style="display: none;">
+                <div class="chart-container">
+                    <div class="chart">
+                        <h3>Ваш балл</h3>
+                        <div style="font-size: 3em; color: #ffeb3b;" id="vasilchenkoScore">-</div>
+                        <div class="score-bar">
+                            <div class="score-fill" id="vasilchenkoBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="vasilchenkoInterpretation">
+                    <h3>Интерпретация:</h3>
+                    <p id="vasilchenkoText"></p>
+                    <h3>Рекомендации:</h3>
+                    <ul id="vasilchenkoAdvice"></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Слайд 8: Результаты Нагоски -->
+        <div class="slide">
+            <h2>🧠 Результаты теста Нагоски</h2>
+            <div class="results" id="nagoskiResults" style="display: none;">
+                <div class="chart-container">
+                    <div class="chart">
+                        <h3 style="color: #ff6b6b;">SIS (Тормоз)</h3>
+                        <div style="font-size: 2em;" id="sisScore">-</div>
+                        <div class="score-bar">
+                            <div class="score-fill" id="sisBar" style="width: 0%; background: linear-gradient(90deg, #ff6b6b, #ff8a80);"></div>
+                        </div>
+                        <small id="sisLevel">-</small>
+                    </div>
+                    <div class="chart">
+                        <h3 style="color: #4CAF50;">SES (Газ)</h3>
+                        <div style="font-size: 2em;" id="sesScore">-</div>
+                        <div class="score-bar">
+                            <div class="score-fill" id="sesBar" style="width: 0%; background: linear-gradient(90deg, #4CAF50, #8BC34A);"></div>
+                        </div>
+                        <small id="sesLevel">-</small>
+                    </div>
+                </div>
+                <div id="nagoskiInterpretation">
+                    <h3>Ваш сексуальный темперамент:</h3>
+                    <p id="nagoskiText"></p>
+                    <h3>Практические советы:</h3>
+                    <ul id="nagoskiAdvice"></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Слайд 9: Справочные таблицы -->
+        <div class="slide">
+            <h2>📋 Справочные таблицы</h2>
+            <div class="content" style="font-size: 1em;">
+                <table>
+                    <tr>
+                        <th>Тип конституции</th>
+                        <th>Балл Васильченко</th>
+                        <th>Основные характеристики</th>
+                    </tr>
+                    <tr>
+                        <td class="highlight">Чрезвычайно слабая</td>
+                        <td>1,0-1,5</td>
+                        <td>Очень позднее созревание, низкая активность</td>
+                    </tr>
+                    <tr>
+                        <td class="highlight">Слабая</td>
+                        <td>2,6-3,5</td>
+                        <td>Позднее созревание, редкая активность</td>
+                    </tr>
+                    <tr>
+                        <td class="highlight">Средняя</td>
+                        <td>4,6-5,5</td>
+                        <td>Нормальное развитие, умеренная активность</td>
+                    </tr>
+                    <tr>
+                        <td class="highlight">Сильная</td>
+                        <td>6,6-7,5</td>
+                        <td>Раннее созревание, высокая активность</td>
+                    </tr>
+                    <tr>
+                        <td class="highlight">Чрезвычайно сильная</td>
+                        <td>8,6-9,0</td>
+                        <td>Очень раннее созревание, максимальная активность</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Слайд 10: Интерпретация SIS/SES -->
+        <div class="slide">
+            <h2>🎯 Интерпретация SIS/SES</h2>
+            <div class="content">
+                <div style="display: flex; gap: 30px;">
+                    <div style="flex: 1;">
+                        <table>
+                            <tr><th colspan="2" style="background: rgba(255,107,107,0.3);">SIS (Тормоз)</th></tr>
+                            <tr><td>0-6</td><td>Низкая чувствительность к подавлению</td></tr>
+                            <tr><td>7-13</td><td>Средняя чувствительность</td></tr>
+                            <tr><td>14-20</td><td>Высокая чувствительность к стрессу</td></tr>
+                        </table>
+                    </div>
+                    <div style="flex: 1;">
+                        <table>
+                            <tr><th colspan="2" style="background: rgba(76,175,80,0.3);">SES (Газ)</th></tr>
+                            <tr><td>0-7</td><td>Нужна активная стимуляция</td></tr>
+                            <tr><td>8-15</td><td>Средняя отзывчивость</td></tr>
+                            <tr><td>16-24</td><td>Высокая отзывчивость</td></tr>
+                        </table>
+                    </div>
+                </div>
+                <div style="margin-top: 30px; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
+                    <h3>💡 Ключевые принципы:</h3>
+                    <p>• Высокий SIS = нужна безопасная, расслабленная обстановка</p>
+                    <p>• Низкий SES = важна активная стимуляция и разнообразие</p>
+                    <p>• Баланс индивидуален и может меняться в зависимости от контекста</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Слайд 11: Рекомендации -->
+        <div class="slide">
+            <h2>💡 Персональные рекомендации</h2>
+            <div class="content">
+                <div id="personalRecommendations">
+                    <div style="background: rgba(255,255,255,0.1); padding: 25px; border-radius: 15px; margin: 20px 0;">
+                        <h3>🎯 Для улучшения сексуальной жизни:</h3>
+                        <p>• Изучите свой тип и обсудите его с партнером</p>
+                        <p>• Адаптируйте условия под свои особенности</p>
+                        <p>• Помните: нет "правильного" или "неправильного" типа</p>
+                        <p>• При проблемах обратитесь к сексологу</p>
+                    </div>
+                    
+                    <div style="background: rgba(255,255,255,0.1); padding: 25px; border-radius: 15px; margin: 20px 0;">
+                        <h3>📚 Рекомендуемая литература:</h3>
+                        <p>• Г.С. Васильченко "Общая сексопатология"</p>
+                        <p>• Emily Nagoski "Come As You Are"</p>
+                        <p>• Эмили Нагоски "Как хочет женщина"</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Слайд 12: Заключение -->
+        <div class="slide">
+            <h1>🙏 Спасибо за участие!</h1>
+            <div class="content">
+                <h3>Ключевые выводы:</h3>
+                <p>✅ Вы прошли научно обоснованную диагностику</p>
+                <p>🧬 Получили персональный профиль сексуальности</p>
+                <p>💡 Узнали о своих особенностях и потребностях</p>
+                <p>🎯 Получили практические рекомендации</p>
+                
+                <div style="margin-top: 40px;">
+                    <h3>❗ Важное напоминание:</h3>
+                    <p style="background: rgba(255,255,0,0.2); padding: 15px; border-radius: 10px;">
+                        Результаты носят информационный характер и не заменяют профессиональную консультацию специалиста
+                    </p>
+                </div>
+                
+                <button onclick="restartPresentation()" style="margin-top: 20px; font-size: 20px;">
+                    🔄 Пройти тесты заново
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button onclick="previousSlide()">⬅️ Назад</button>
+        <button onclick="nextSlide()">Вперед ➡️</button>
+    </div>
+
+    <script>
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        // Обновление счетчика слайдов
+        document.getElementById('totalSlides').textContent = totalSlides;
+
+        function updateSlideCounter() {
+            document.getElementById('currentSlide').textContent = currentSlideIndex + 1;
+        }
+
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[index].classList.add('active');
+            updateSlideCounter();
+        }
+
+        function nextSlide() {
+            if (currentSlideIndex < totalSlides - 1) {
+                currentSlideIndex++;
+                showSlide(currentSlideIndex);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlideIndex > 0) {
+                currentSlideIndex--;
+                showSlide(currentSlideIndex);
+            }
+        }
+
+        // Навигация клавишами
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                previousSlide();
+            }
+        });
+
+        // Функции для запуска тестов
+        function startVasilchenkoTest(gender) {
+            if (gender === 'male') {
+                currentSlideIndex = 3;
+            } else {
+                currentSlideIndex = 4;
+            }
+            showSlide(currentSlideIndex);
+        }
+
+        function startNagoskiTest() {
+            currentSlideIndex = 5;
+            showSlide(currentSlideIndex);
+        }
+
+        // Расчет результатов Васильченко (мужчины)
+        function calculateVasilchenkoMale() {
+            const libidoAge = parseInt(document.getElementById('libido_age_m').value);
+            const ejaculationAge = parseInt(document.getElementById('ejaculation_age_m').value);
+            const trochanter = parseFloat(document.getElementById('trochanter_m').value);
+            const hair = parseInt(document.querySelector('input[name="hair_m"]:checked')?.value || 5);
+            const maxExcess = parseInt(document.getElementById('max_excess_m').value);
+            
+            if (!libidoAge || !ejaculationAge || !trochanter || !maxExcess) {
+                alert('Пожалуйста, заполните все поля');
+                return;
+            }
+            
+            // Упрощенный расчет баллов
+            let libidoScore = libidoAge >= 18 ? 1 : libidoAge <= 10 ? 9 : 10 - libidoAge;
+            let ejaculationScore = ejaculationAge >= 19 ? 1 : ejaculationAge <= 11 ? 9 : 20 - ejaculationAge;
+            let trochanterScore = trochanter >= 2.03 ? 1 : trochanter <= 1.88 ? 9 : Math.round((2.03 - trochanter) * 20 + 1);
+            let excessScore = maxExcess <= 1 ? 1 : maxExcess >= 10 ? 9 : maxExcess;
+            
+            const totalScore = (libidoScore + ejaculationScore + trochanterScore + hair + excessScore) / 5;
+            
+            displayVasilchenkoResults(totalScore);
+            currentSlideIndex = 6;
+            showSlide(currentSlideIndex);
+        }
+
+        // Расчет результатов Васильченко (женщины)
+        function calculateVasilchenkoFemale() {
+            const menarcheAge = parseInt(document.getElementById('menarche_age_f').value);
+            const trochanter = parseFloat(document.getElementById('trochanter_f').value);
+            const libidoAge = parseInt(document.getElementById('libido_age_f').value);
+            const orgasmAge = parseInt(document.getElementById('orgasm_age_f').value);
+            const hair = parseInt(document.querySelector('input[name="hair_f"]:checked')?.value || 5);
+            
+            if (!menarcheAge || !trochanter || !libidoAge || !orgasmAge) {
+                alert('Пожалуйста, заполните все поля');
+                return;
+            }
+            
+            // Упрощенный расчет баллов для женщин
+            let menarcheScore = menarcheAge >= 17 ? 1 : menarcheAge <= 9 ? 9 : 18 - menarcheAge;
+            let trochanterScore = trochanter <= 1.92 ? 1 : trochanter >= 2.06 ? 9 : Math.round((trochanter - 1.88) * 5 + 1);
+            let libidoScore = libidoAge >= 18 ? 1 : libidoAge <= 10 ? 9 : 19 - libidoAge;
+            let orgasmScore = orgasmAge >= 35 ? 1 : orgasmAge <= 15 ? 8 : Math.round((35 - orgasmAge) / 2.5 + 1);
+            
+            const totalScore = (menarcheScore + trochanterScore + libidoScore + orgasmScore + hair) / 5;
+            
+            displayVasilchenkoResults(totalScore);
+            currentSlideIndex = 6;
+            showSlide(currentSlideIndex);
+        }
+
+        function displayVasilchenkoResults(score) {
+            document.getElementById('vasilchenkoResults').style.display = 'block';
+            document.getElementById('vasilchenkoScore').textContent = score.toFixed(1);
+            
+            const percentage = (score / 9) * 100;
+            document.getElementById('vasilchenkoBar').style.width = percentage + '%';
+            
+            let interpretation = '';
+            let advice = [];
+            
+            if (score < 2.5) {
+                interpretation = '📉 Слабая половая конституция. Характеризуется поздним созреванием и низкой половой активностью.';
+                advice = ['Не торопите события, развитие индивидуально', 'Создавайте комфортную обстановку', 'При проблемах обратитесь к специалисту'];
+            } else if (score < 4.5) {
+                interpretation = '📊 Средне-слабая половая конституция. Умеренные показатели с тенденцией к более спокойному темпу.';
+                advice = ['Учитывайте свой естественный ритм', 'Не сравнивайте себя с другими', 'Развивайте эмоциональную близость'];
+            } else if (score < 6.5) {
+                interpretation = '⚖️ Средняя половая конституция. Сбалансированные показатели, норма для большинства.';
+                advice = ['Поддерживайте здоровый образ жизни', 'Открыто общайтесь с партнером', 'Экспериментируйте в безопасных рамках'];
+            } else if (score < 7.5) {
+                interpretation = '📈 Сильная половая конституция. Раннее созревание и высокая активность.';
+                advice = ['Учитывайте потребности партнера', 'Не давите на партнера с другой конституцией', 'Направляйте энергию конструктивно'];
+            } else {
+                interpretation = '🔥 Очень сильная половая конституция. Максимальные показатели активности.';
+                advice = ['Ищите совместимого партнера', 'Обратитесь к специалисту при проблемах', 'Развивайте самоконтроль'];
+            }
+            
+            document.getElementById('vasilchenkoText').textContent = interpretation;
+            const adviceList = document.getElementById('vasilchenkoAdvice');
+            adviceList.innerHTML = '';
+            advice.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                adviceList.appendChild(li);
+            });
+        }
+
+        // Расчет результатов Нагоски
+        function calculateNagoski() {
+            const sisQuestions = ['sis1', 'sis2', 'sis3', 'sis4', 'sis5'];
+            const sesQuestions = ['ses1', 'ses2', 'ses3', 'ses4', 'ses5', 'ses6'];
+            
+            let sisTotal = 0;
+            let sesTotal = 0;
+            
+            // Проверка заполненности
+            let allFilled = true;
+            
+            sisQuestions.forEach(q => {
+                const value = document.querySelector(`input[name="${q}"]:checked`)?.value;
+                if (value) {
+                    sisTotal += parseInt(value);
+                } else {
+                    allFilled = false;
+                }
+            });
+            
+            sesQuestions.forEach(q => {
+                const value = document.querySelector(`input[name="${q}"]:checked`)?.value;
+                if (value) {
+                    sesTotal += parseInt(value);
+                } else {
+                    allFilled = false;
+                }
+            });
+            
+            if (!allFilled) {
+                alert('Пожалуйста, ответьте на все вопросы');
+                return;
+            }
+            
+            displayNagoskiResults(sisTotal, sesTotal);
+            currentSlideIndex = 7;
+            showSlide(currentSlideIndex);
+        }
+
+        function displayNagoskiResults(sisScore, sesScore) {
+            document.getElementById('nagoskiResults').style.display = 'block';
+            
+            document.getElementById('sisScore').textContent = sisScore + '/20';
+            document.getElementById('sesScore').textContent = sesScore + '/24';
+            
+            const sisPercentage = (sisScore / 20) * 100;
+            const sesPercentage = (sesScore / 24) * 100;
+            
+            document.getElementById('sisBar').style.width = sisPercentage + '%';
+            document.getElementById('sesBar').style.width = sesPercentage + '%';
+            
+            // Определение уровней
+            let sisLevel = '';
+            if (sisScore <= 6) sisLevel = 'Низкий уровень торможения';
+            else if (sisScore <= 13) sisLevel = 'Средний уровень торможения';
+            else sisLevel = 'Высокий уровень торможения';
+            
+            let sesLevel = '';
+            if (sesScore <= 7) sesLevel = 'Низкий уровень возбуждения';
+            else if (sesScore <= 15) sesLevel = 'Средний уровень возбуждения';
+            else sesLevel = 'Высокий уровень возбуждения';
+            
+            document.getElementById('sisLevel').textContent = sisLevel;
+            document.getElementById('sesLevel').textContent = sesLevel;
+            
+            // Интерпретация
+            let interpretation = `Ваш сексуальный темперамент: SIS ${sisScore}/20, SES ${sesScore}/24. `;
+            let advice = [];
+            
+            if (sisScore > 13) {
+                interpretation += 'У вас высокая чувствительность к факторам, подавляющим возбуждение. ';
+                advice.push('Создавайте максимально комфортную и безопасную обстановку');
+                advice.push('Избегайте стрессов перед близостью');
+                advice.push('Обсудите с партнером важность атмосферы');
+            }
+            
+            if (sesScore < 8) {
+                interpretation += 'Вам нужна более активная стимуляция для возбуждения. ';
+                advice.push('Экспериментируйте с различными формами стимуляции');
+                advice.push('Не стесняйтесь просить то, что вам нужно');
+                advice.push('Используйте фантазии и предварительные ласки');
+            }
+            
+            if (sisScore < 7 && sesScore > 15) {
+                interpretation += 'У вас "легкий старт" - быстрое возбуждение при низком торможении. ';
+                advice.push('Вы легко возбуждаетесь в большинстве ситуаций');
+                advice.push('Учитывайте, что у партнера может быть другой темп');
+            }
+            
+            if (sisScore > 13 && sesScore < 8) {
+                interpretation += 'Вам нужны особые условия и активная стимуляция. ';
+                advice.push('Уделяйте много внимания созданию правильной атмосферы');
+                advice.push('Не спешите, дайте себе время');
+                advice.push('Изучайте, что именно вас возбуждает');
+            }
+            
+            document.getElementById('nagoskiText').textContent = interpretation;
+            
+            const adviceList = document.getElementById('nagoskiAdvice');
+            adviceList.innerHTML = '';
+            advice.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                adviceList.appendChild(li);
+            });
+        }
+
+        // Обновление прогресса теста Нагоски
+        document.addEventListener('change', function(e) {
+            if (e.target.name && (e.target.name.startsWith('sis') || e.target.name.startsWith('ses'))) {
+                updateNagoskiProgress();
+            }
+        });
+
+        function updateNagoskiProgress() {
+            const allQuestions = ['sis1', 'sis2', 'sis3', 'sis4', 'sis5', 'ses1', 'ses2', 'ses3', 'ses4', 'ses5', 'ses6'];
+            let answered = 0;
+            
+            allQuestions.forEach(q => {
+                if (document.querySelector(`input[name="${q}"]:checked`)) {
+                    answered++;
+                }
+            });
+            
+            const progress = (answered / allQuestions.length) * 100;
+            document.getElementById('nagoskiProgress').style.width = progress + '%';
+        }
+
+        function restartPresentation() {
+            currentSlideIndex = 0;
+            showSlide(currentSlideIndex);
+            
+            // Очистка форм
+            document.getElementById('vasilchenkoMaleForm').reset();
+            document.getElementById('vasilchenkoFemaleForm').reset();
+            document.getElementById('nagoskiForm').reset();
+            
+            // Скрытие результатов
+            document.getElementById('vasilchenkoResults').style.display = 'none';
+            document.getElementById('nagoskiResults').style.display = 'none';
+            
+            // Сброс прогресса
+            document.getElementById('nagoskiProgress').style.width = '0%';
+        }
+
+        // Инициализация
+        updateSlideCounter();
+    </script>
+</body>
+</html>
