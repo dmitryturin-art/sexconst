@@ -38,9 +38,10 @@
 
 1. **Клонируйте репозиторий:**
    ```bash
-   git clone https://github.com/your-username/sexconst.git
+   git clone https://github.com/YOUR_USERNAME/sexconst.git
    cd sexconst
    ```
+   *Замените `YOUR_USERNAME` на ваш GitHub username*
 
 2. **Запустите локальный сервер:**
    ```bash
@@ -149,7 +150,7 @@ sexconst/
 ## 📞 Поддержка
 
 Если у вас возникли вопросы или проблемы:
-- Создайте [Issue](https://github.com/your-username/sexconst/issues)
+- Создайте [Issue](https://github.com/YOUR_USERNAME/sexconst/issues)
 - Свяжитесь с автором через [Telegram](https://t.me/dmitry_turin_psy)
 
 ---
