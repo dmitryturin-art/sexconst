@@ -485,15 +485,41 @@ function handleModal(e) {
   // Использование рассчитанного значения
   if (e.target.id === 'use-trochanter') {
     console.log('Use trochanter clicked');
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Проверить, не заблокирована ли кнопка
+    if (e.target.disabled) {
+      console.log('Button is disabled, ignoring click');
+      return;
+    }
+    
     const resultSpan = document.getElementById('trochanter-result');
     const index = parseFloat(resultSpan.textContent);
-    if (index) {
+    console.log('Index value:', index);
+    
+    if (index && !isNaN(index)) {
       const trochanterInput = document.getElementById('answer-trochanter_index');
       if (trochanterInput) {
         trochanterInput.value = index;
         testAnswers['trochanter_index'] = index;
+        console.log('Value applied to input:', index);
       }
-      modal.classList.add('hidden');
+      
+      // Закрыть модальное окно калькулятора
+      const calculatorModal = document.getElementById('trochanter-modal');
+      console.log('Calculator modal element:', calculatorModal);
+      if (calculatorModal) {
+        calculatorModal.classList.add('hidden');
+        console.log('Modal closed');
+      } else {
+        console.error('Calculator modal not found!');
+      }
+      
+      // Показать уведомление об успешном использовании значения
+      console.log('Trochanter index value applied:', index);
+    } else {
+      console.error('Invalid index value:', index);
     }
     return;
   }
@@ -782,6 +808,35 @@ function setupModalCalculator() {
   document.addEventListener('input', function(e) {
     if (e.target.id === 'height-input' || e.target.id === 'leg-length-input') {
       calculateModalIndex();
+    }
+  });
+  
+  // Специальный обработчик для кнопки "Использовать это значение"
+  document.addEventListener('click', function(e) {
+    if (e.target.id === 'use-trochanter') {
+      console.log('Use trochanter button clicked directly');
+      e.preventDefault();
+      e.stopPropagation();
+      
+      const resultSpan = document.getElementById('trochanter-result');
+      const index = parseFloat(resultSpan.textContent);
+      console.log('Direct handler - Index value:', index);
+      
+      if (index && !isNaN(index)) {
+        const trochanterInput = document.getElementById('answer-trochanter_index');
+        if (trochanterInput) {
+          trochanterInput.value = index;
+          testAnswers['trochanter_index'] = index;
+          console.log('Direct handler - Value applied to input:', index);
+        }
+        
+        // Закрыть модальное окно калькулятора
+        const calculatorModal = document.getElementById('trochanter-modal');
+        if (calculatorModal) {
+          calculatorModal.classList.add('hidden');
+          console.log('Direct handler - Modal closed');
+        }
+      }
     }
   });
 }
