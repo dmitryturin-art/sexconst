@@ -1647,6 +1647,85 @@ select.form-control {
   margin-bottom: var(--space-4);
 }
 
+/* Таблица совместимости */
+.compatibility-table {
+  margin: var(--space-16) 0;
+  overflow-x: auto;
+}
+
+.compatibility-table table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.compatibility-table th {
+  background: var(--color-teal-500);
+  color: var(--color-white);
+  padding: var(--space-12) var(--space-16);
+  text-align: left;
+  font-weight: 600;
+  font-size: var(--text-sm);
+}
+
+.compatibility-table td {
+  padding: var(--space-12) var(--space-16);
+  border-bottom: 1px solid var(--color-gray-200);
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+.compatibility-table tr:last-child td {
+  border-bottom: none;
+}
+
+.compatibility-table tr:nth-child(even) {
+  background: var(--color-bg-1);
+}
+
+.compatibility-table td:first-child {
+  font-weight: 600;
+  color: var(--color-text);
+  min-width: 200px;
+}
+
+.compatibility-table td:nth-child(2) {
+  color: var(--color-text-secondary);
+  font-style: italic;
+  min-width: 150px;
+}
+
+.compatibility-table td:last-child {
+  color: var(--color-text);
+  min-width: 250px;
+}
+
+@media (max-width: 768px) {
+  .compatibility-table {
+    font-size: var(--text-sm);
+  }
+  
+  .compatibility-table th,
+  .compatibility-table td {
+    padding: var(--space-8) var(--space-12);
+  }
+  
+  .compatibility-table td:first-child {
+    min-width: 150px;
+  }
+  
+  .compatibility-table td:nth-child(2) {
+    min-width: 120px;
+  }
+  
+  .compatibility-table td:last-child {
+    min-width: 200px;
+  }
+}
+
 /* Результаты */
 .results-content {
   max-width: 800px;

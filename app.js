@@ -885,14 +885,14 @@ function getIndexInterpretation(index) {
   let femaleInterpretation = '';
   
   // Интерпретация для мужчин
-  if (index >= 1.88 && index <= 1.94) {
+  if (index <= 1.99) {
     maleInterpretation = 'сильная';
-  } else if (index >= 1.95 && index <= 1.99) {
+  } else if (index >= 2.00 && index <= 2.02) {
     maleInterpretation = 'средняя';
-  } else if (index >= 2.00) {
+  } else if (index >= 2.03) {
     maleInterpretation = 'слабая';
   } else {
-    maleInterpretation = 'нетипичная (очень сильная)';
+    maleInterpretation = 'нетипичная';
   }
   
   // Интерпретация для женщин
@@ -900,9 +900,9 @@ function getIndexInterpretation(index) {
     femaleInterpretation = 'слабая';
   } else if (index >= 1.97 && index <= 2.00) {
     femaleInterpretation = 'средняя';
-  } else if (index >= 2.01 && index <= 2.06) {
+  } else if (index >= 2.01 && index <= 2.05) {
     femaleInterpretation = 'сильная';
-  } else if (index > 2.06) {
+  } else if (index > 2.05) {
     femaleInterpretation = 'нетипичная (очень сильная)';
   } else {
     femaleInterpretation = 'нетипичная (очень слабая)';
