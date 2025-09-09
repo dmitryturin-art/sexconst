@@ -637,6 +637,13 @@ function renderVasilchenkoQuestion(vectors, gender) {
           <strong>Подсказка:</strong> Если не знаете свой трохантерный индекс, воспользуйтесь <a href="#" data-action="open-calculator" style="color: var(--color-primary); text-decoration: underline;">онлайн-калькулятором</a> или изучите <a href="#" data-action="open-description" style="color: var(--color-primary); text-decoration: underline;">как измерить трохантерный индекс</a>
         </div>
       `;
+    } else if (vector.name === 'max_excess') {
+      questionHTML += `
+        <div class="number-input-group">
+          <input type="number" class="form-control" id="answer-${vector.name}" placeholder="Количество">
+          <span class="input-helper">раз</span>
+        </div>
+      `;
     } else {
       questionHTML += `
         <div class="number-input-group">
