@@ -244,7 +244,6 @@ function initializeApp() {
   setupTestNavigation();
   setupNagoskiTest();
   setupGuideCalculators();
-  setupContactInfo();
 
   // Автоматический расчет индекса с значениями по умолчанию
   setTimeout(() => {
